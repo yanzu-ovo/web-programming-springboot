@@ -2,12 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.hellospringboot.repository.MessageMapper">
     <select id="searchMessage" resultType="com.example.hellospringboot.entity.Message">
-        select * from db_message
+        select * from message
         <where>
             <if test="keyword != null and keyword != ''">
                 content like concat('%',#{keyword},'%')
             </if>
         </where>
-        order by create_time desc
+        order by created_at desc
     </select>
 </mapper>
