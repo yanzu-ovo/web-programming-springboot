@@ -11,7 +11,9 @@
 | 03 | **I Am Someone**（身份）— 声音有了主人，字段即决定 | `GET /profile` → 完整身份档案 | `entity/PersonalProfile.java` + `ProfileController` |
 | 04 | **I Can Listen**（倾听）— 读是 GET，留言是 POST | `POST /messages`、`GET /messages`、`GET /messages/{id}` | `controller/MessageController.java` |
 | 05 | **I Have Structure**（组织）— Controller → Service → Repository，依赖只向下 | 同上 | `service/MessageService.java`、`repository/MessageRepository.java`、`InMemoryMessageRepository` |
-| 06 | **Memory Palace**（记忆宫殿）— MySQL + MyBatis Plus 持久化 | `GET /messages/search`（分页 + 搜索） | `repository/MessageMapper.java`、`DbMessageRepository`、`mapper/MessageMapper.xml` |
+| 06 | **Memory Palace**（记忆宫殿）— MySQL + MyBatis Plus 持久化 | 同上 | `repository/MessageMapper.java`、`DbMessageRepository`、`mapper/MessageMapper.xml` |
+| 07 | **It Can Be Found**（被找到）— keyword + 分页，让记忆可以航行 | `GET /messages/search`、`GET /messages?keyword=&page=&size=` | `service/BlogProfile.java` |
+| 08 | **I Am Complete**（完整）— Articles 发布能力 + Result 统一契约 | `POST /articles`、`GET /articles/{id}`、`GET /articles?keyword=&page=&size=`、`PUT /articles/{id}`、`DELETE /articles/{id}` | `controller/ArticleController.java`、`common/Result.java` |
 
 ## 快速体验
 
@@ -30,9 +32,28 @@ curl -X POST http://localhost:8080/messages \
 curl http://localhost:8080/messages
 curl http://localhost:8080/messages/1
 
-# Week 06 — 记忆宫殿（分页 + 搜索）
+# Week 06/07 — 记忆宫殿（分页 + 搜索）
 curl "http://localhost:8080/messages/search?page=1&size=5&keyword=Hello"
+
+# Week 08 — 文章：发布 / 读单篇 / 发现 / 修改 / 撤回（统一 Result 契约）
+curl -X POST http://localhost:8080/articles -H "Content-Type: application/json" \
+     -d '{"title":"My first article","content":"Hello, this is MyBlog speaking."}'
+curl http://localhost:8080/articles/1
+curl "http://localhost:8080/articles?keyword=MyBlog&page=1&size=5"
+curl -X PUT http://localhost:8080/articles/1 -H "Content-Type: application/json" \
+     -d '{"title":"Revised","content":"I changed my mind."}'
+curl -X DELETE http://localhost:8080/articles/1
 ```
+
+## 统一响应契约（Week 08）
+
+无论成功失败，所有端点返回同一个骨架：
+
+```json
+{ "code": 0,    "message": "ok",           "data": { ... } }
+{ "code": 404,  "message": "article not found", "data": null }
+```
+
 
 ## 架构（Week 05 起）
 
